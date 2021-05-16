@@ -2,7 +2,7 @@
 
     if (!isset($_POST['regSubmit'])) {
          //Hiba
-        header('location: login/registrationRequired');
+        header('location: login.php?error=registrationRequired');
         exit();
     }
 
@@ -18,32 +18,32 @@
 
         if (empty($userName)) {
             //Üres felh.
-           header('location: registration/emptyUserNameField');
+           header('location: registration.php?error=emptyUserNameField');
            exit();
        }
        if (empty($userEmail)) {
             //Üres Email
-           header('location: registration/emptyEmailField');
+           header('location: registration.php?error=emptyEmailField');
            exit();
        }
        if (empty($userPassword)) {
             //Üres Jelszó
-           header('location: registration/emptyPasswordField');
+           header('location: registration.php?error=emptyPasswordField');
            exit();
        }
        if (empty($passwordCheck)) {
             //Üres Jelszó2
-           header('location: registration/emptyPasswordFerifField');
+           header('location: registration.php?error=emptyPasswordFerifField');
            exit();
        }
        if ($userPassword != $passwordCheck) {
             //Jelszavak nem egyeznek
-           header('location: registration/passwordsDontMatch');
+           header('location: registration.php?error=passwordsDontMatch');
            exit();
        }
        if (empty($userFirstName or empty($userLastName))) {
             //Nincs megadva név
-           header('lcoation: registration/emptyNameFields');
+           header('lcoation: registration.php?error=emptyNameFields');
            exit();
        }
        if (empty($refferalCode)) {

@@ -6,7 +6,7 @@
          //Teszt, hogy létezik e a felhasználó
         $userCheck = userLogCheck($mysql, $userName, $userPassword);
         if ($userCheck == false) {
-            header('location: ../login/userNotFound');
+            header('location: ../login.php?error=userNotFound');
             exit();
         } 
          //Jelszó ellenőrzése
@@ -22,7 +22,7 @@
         $checkPassword = password_verify($userPassword, $userPwdHashed);
         if ($checkPassword == 0) {
            //Hiba
-          header('location: ../login/wrongPassword/'. $userName);
+          header('location: ../login.php?error=wrongPassword?uID='. $userName);
           exit();
         }
 
@@ -55,6 +55,6 @@
             header('location: ../home/verifyEmail');
             exit();
         } */
-        header('location: ../home');
+        header('location: ../home.php');
         exit();
     }

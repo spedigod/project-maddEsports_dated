@@ -6,7 +6,7 @@
     }*/
     
     if ($isCoach == 0 and $isAdmin == 0) {
-        header('location: home/'. $userName);
+        header('location: home.php?userName='. $userName);
         exit();
     }
 ?>

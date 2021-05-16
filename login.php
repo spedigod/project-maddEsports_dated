@@ -4,12 +4,13 @@
         header('location: includeFiles\redirecter.inc.php');
         exit();
     }*/
+    echo $_GET['error'];
+
     if (isset($_GET['uID'])) {
         $userName = $_GET['uID'];
     } else {
         $userName = '';
     }
-    echo $_GET['error'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -20,7 +21,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action=" /maddEsports/includeFiles/login.inc.php" method="post">
+    <form action="includeFiles/login.inc.php" method="post">
         <input type="text" name="userName" id="userName" value="<?php echo $userName ?>" placeholder="Felhasználónév">
         <input type="password" name="userPassword" id="userPassword" placeholder="Jelszó">
 

@@ -3,7 +3,7 @@
     //include 'includeFiles/validateUser.php';
 
     if ($isAdmin == 0) {
-        header('location: home'. $userName);
+        header('location: home.php?userName='. $userName);
     }
     if ($adminLevel == 1) {
         $adminName = 'CEO';

@@ -1,16 +1,14 @@
 php_value session.auto_start 1
 
-RewriteEngine on
+# Jegelve, nem működik úgy ahogy kéne
+RewriteEngine Off
 
-RewriteCond %{REQUEST_FILENAME} !-d
-
-RewriteCond %{REQUEST_FILENAME}\.php -f
 
 RewriteRule ^home home.php [NC]
 RewriteRule ^home/([0-9a-zA-Z_-]+) home.php/message=$1 [NC]
 
 RewriteRule ^profile profile.php [NC]
-RewriteRule ^profile/([0-9a-zA-Z_-]+) profile.php?userName=$2 [NC]
+RewriteRule ^profile/(\S+) /profile/?userName=$2 [NC]
 
 RewriteRule ^login login.php
 RewriteRule ^login/([0-9a-zA-Z_-]+) login.php?error=$1 [NC]

@@ -1,14 +1,14 @@
 <?php
 
 if (!isset($_POST['friendRequest'])) {
-    header('location: ../profile');
+    header('location: ../profile.php');
     exit();
 }
 
 // session_start();
 
 if (!isset($_SESSION['userName'])) {
-    header('location: ../loginloginRequired');
+    header('location: ../login.php?error=loginRequired');
     exit();
 }
 
@@ -27,5 +27,5 @@ if (!$friendRequest -> execute()) {
 }
 $friendRequest -> close();
 
-header('location: ../profile/'. $requestTo);
+header('location: ../profile.php?userName='. $requestTo);
 exit();

@@ -26,12 +26,12 @@
     <button><a href="includeFiles/logout.inc.php">Kilépés</a></button>
     <?php 
     if ($isAdmin == 1) {
-        echo '<button><a href="admin">Admin panel</a></button>';
+        echo '<button><a href="admin.php">Admin panel</a></button>';
     }
     ?>
-    <button><a href="groupFinder">Csapatok</a></button>
-    <button><a href="profile<?php $userName ?>">Profil</a></button>
-    <button><a href="userList">Felhasználók</a></button>
+    <button><a href="groupFinder.php">Csapatok</a></button>
+    <button><a href="profile.php?userName=<?php $userName ?>">Profil</a></button>
+    <button><a href="userList.php">Felhasználók</a></button>
     <section>
         <table>
             <tr>

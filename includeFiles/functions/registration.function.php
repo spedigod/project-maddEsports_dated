@@ -6,19 +6,19 @@
         $invaliduserName = invaliduserName($userName);
         if ( $invaliduserName == 1) {
             //Hiba
-           header('location: ../registration/inValiduserName');
+           header('location: ../registration.php?error=inValiduserName');
            exit();
        }
        $userExists = userExists($mysql, $userName);
         if ($userExists == 1) {
              //Hiba
-            header('location: ../registration/userAlreadyExists');
+            header('location: ../registration.php?error=userAlreadyExists');
             exit();
         }
         $userEmailInvalid = userEmailInvalid($userEmail);
         if ($userEmailInvalid == 1) {
              //Hiba
-            header('location: ../registration/invalidEmailFormat');
+            header('location: ../registration.php?error=invalidEmailFormat');
             exit();
         }
 
@@ -55,7 +55,7 @@
         $n = 10;
         getRefferalCode($n, $mysql, $userName, $refferalCode);
 
-        header('location: ../login/success/'. $userName);
+        header('location: ../login.php?error=success?uID='. $userName);
         exit();
 
         

@@ -9,7 +9,7 @@
 
     if (!isset($userName)) {
          //Hiba
-        header('location: login/loginRequired');
+        header('location: login.php?error=loginRequired');
         exit();
     }
 

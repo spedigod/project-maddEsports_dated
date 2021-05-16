@@ -3,11 +3,11 @@
     // session_start();
 
 if (!isset($_SESSION['userName'])) {
-    header('location: ../login/loginRequired');
+    header('location: ../login.php?error=loginRequired');
     exit();
 }
 if (!isset($_POST['friendDelete'])) {
-    header('location: ../profile');
+    header('location: ../profile.php');
     exit();
 }
 
@@ -21,6 +21,6 @@ $deleteFriend -> bind_param('ssss', $userPage, $userName, $userPage, $userName);
 $deleteFriend -> execute();
 $deleteFriend -> close();
 
-header('location: ../profile/'. $userPage);
+header('location: ../profile.php?userName='. $userPage);
 exit();
 
