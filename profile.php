@@ -4,7 +4,6 @@
         header('location: login.php?error=loginRequired');
         exit();
     }
-    echo $_GET['userName'];
     include_once 'includeFiles/dbh.inc.php';
     
     $userName = $_SESSION['userName'];

@@ -1,10 +1,8 @@
 <?php
-    // session_start();
-    /*if (isset($_SESSION['userName'])) {
-        header('location: includeFiles\redirecter.inc.php');
+    if (isset($_SESSION['userName'])) {
+        header('location: home.php');
         exit();
-    }*/
-    echo $_GET['error'];
+    }
 
     if (isset($_GET['uID'])) {
         $userName = $_GET['uID'];
