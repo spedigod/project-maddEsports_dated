@@ -4,7 +4,7 @@
 
     if (!isset($_POST['loginSubmit'])) {
          //Hiba
-        header('location: ../login/loginRequired');
+        header('location: ../login.php?error=loginRequired');
         exit();
     } 
         
@@ -14,11 +14,11 @@
          //Ellenőrzés
         if (empty($userName)) {
              //Hiba
-            header('location: ../login/emptyUsernameField');
+            header('location: ../login.php?error=emptyUsernameField');
             exit();
         } elseif (empty($userPassword)) {
              //Hiba
-            header('location: ../login/emtpyPasswordField/'. $userName);
+            header('location: ../login.php?error=emtpyPasswordField?uID='. $userName);
             exit();
         } 
              

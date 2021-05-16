@@ -7,7 +7,7 @@
     <title>MADD ESPORTS</title>
 </head>
 <body>
-    <a href="login"><button>Belépés</button></a>
-    <a href="registration"><button>Regisztráció</button></a>
+    <a href="login.php"><button>Belépés</button></a>
+    <a href="registration.php"><button>Regisztráció</button></a>
 </body>
 </html>

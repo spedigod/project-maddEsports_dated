@@ -1,18 +1,15 @@
 <?php 
     // session_start();
     if (!isset($_SESSION['userName'])) {
-        header('location: login/loginRequired');
+        header('location: login.php?error=loginRequired');
         exit();
     }
-    echo $_SESSION['userName'];
-    echo $_GET['userName'];
     include_once 'includeFiles/dbh.inc.php';
     
     $userName = $_SESSION['userName'];
     if (isset($_GET['userName'])) {
-        if ($_GET['userName'] == $userName) {
+        if ($_GET['userName'] == $_SESSION['userName']) {
             $userPage = $userName;
-            header('location: profile');
         }
         $userPage = $_GET['userName'];
         $validUserPage = $mysql -> prepare("SELECT * FROM users WHERE userName = ?");
@@ -21,7 +18,7 @@
         $getData = $validUserPage -> get_result();
         if ($getData -> num_rows == 0) {
             $valid = false;
-            header('location: profile');
+            header('location: profile.php');
         } else {
             $valid = true;
         }

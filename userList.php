@@ -1,7 +1,7 @@
 <?php 
     // session_start();
     if (!isset($_SESSION['userName'])) {
-        header('location: login/loginRequired');
+        header('location: login.php?error=loginRequired');
     }
     include 'includeFiles/dbh.inc.php';
     $userGroupName = $_SESSION['userGroup'];
@@ -30,7 +30,7 @@
             while ($row = $getData -> fetch_assoc()) {
                 echo '<tr>';
                 echo '<td>';
-                echo $row['userName'];
+                echo '<a href="profile.php?userName='. $row['userName'] .'">'. $row["userName"] .'</a>';
                 echo '</td>';
                 echo '<td>';
                 echo $row['userLevel'];

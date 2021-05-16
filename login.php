@@ -1,9 +1,9 @@
 <?php
-    // session_start();
-    /*if (isset($_SESSION['userName'])) {
-        header('location: includeFiles\redirecter.inc.php');
+    if (isset($_SESSION['userName'])) {
+        header('location: home.php');
         exit();
-    }*/
+    }
+
     if (isset($_GET['uID'])) {
         $userName = $_GET['uID'];
     } else {
@@ -19,7 +19,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action=" /maddEsports/includeFiles/login.inc.php" method="post">
+    <form action="includeFiles/login.inc.php" method="post">
         <input type="text" name="userName" id="userName" value="<?php echo $userName ?>" placeholder="Felhasználónév">
         <input type="password" name="userPassword" id="userPassword" placeholder="Jelszó">
 

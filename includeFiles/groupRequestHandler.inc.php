@@ -1,6 +1,6 @@
 <?php
     if (!isset($_POST['groupInvite'])) {
-        header('location: userList');
+        header('location: userList.php');
         exit();
     }
 
@@ -18,7 +18,7 @@
         while ($row = $getResult -> fetch_assoc()) {
             $userInGroup = $row['inGroup'];
             if ($userInGroup == 1) {
-                header('location: ../userList');
+                header('location: ../userList.php');
             }
             if ($userInGroup == 0) {
                 $inviteUser = $mysql -> prepare("INSERT INTO `grouprequests` (`invitedUser`, `invitedBy`, `groupName`) 

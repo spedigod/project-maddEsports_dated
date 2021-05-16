@@ -18,7 +18,7 @@ if (isset($_POST['requestAccept'])) {
     $addFriend -> execute();
     $addFriend -> close();
 
-    header('location: ../profile');
+    header('location: ../profile.php');
     exit();
 }else if (isset($_POST['requestDeny'])) {
     include 'dbh.inc.php';
@@ -29,9 +29,9 @@ if (isset($_POST['requestAccept'])) {
     $requestAccept -> execute();
     $requestAccept -> close();
 
-    header('location: ../profile');
+    header('location: ../profile.php');
     exit();
 } else {
-    header('location: ../profile');
+    header('location: ../profile.php');
     exit();
 }
