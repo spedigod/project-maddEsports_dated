@@ -9,6 +9,7 @@
     } else {
         $userName = '';
     }
+    echo $_GET['error'];
 ?>
 <!DOCTYPE html>
 <html lang="en">

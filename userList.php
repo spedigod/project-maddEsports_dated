@@ -30,7 +30,7 @@
             while ($row = $getData -> fetch_assoc()) {
                 echo '<tr>';
                 echo '<td>';
-                echo $row['userName'];
+                echo '<a href="profile/'. $row['userName'] .'">'. $row["userName"] .'</a>';
                 echo '</td>';
                 echo '<td>';
                 echo $row['userLevel'];

@@ -33,7 +33,11 @@
     <button><a href="profile<?php $userName ?>">Profil</a></button>
     <button><a href="userList">Felhasználók</a></button>
     <section>
-        <?php 
+        <table>
+            <tr>
+                <th>Friends</th>
+            </tr>
+            <?php 
             $friendList = $mysql -> prepare("SELECT * FROM `friends` WHERE `friendOne` = ? OR `friendTwo` = ?");
             $friendList -> bind_param('ss', $userName, $userName);
             $friendList -> execute();
@@ -43,15 +47,18 @@
                     $friend = $row['friendOne'];
                     switch ($friend) {
                         case $userName:
-                            echo $row['friendTwo'];
+                            echo '<tr>
+                                    <th>'. $row["friendTwo"];
                             break;
                         default:
-                            echo $row['friendOne'];
+                        echo '<tr>
+                                <th>'. $row["friendOne"];
                     }
                 }
             }
             $friendList -> close();
         ?>
+        </table>
     </section>
 </body>
 </html>

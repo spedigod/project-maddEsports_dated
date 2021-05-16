@@ -4,15 +4,13 @@
         header('location: login/loginRequired');
         exit();
     }
-    echo $_SESSION['userName'];
     echo $_GET['userName'];
     include_once 'includeFiles/dbh.inc.php';
     
     $userName = $_SESSION['userName'];
     if (isset($_GET['userName'])) {
-        if ($_GET['userName'] == $userName) {
+        if ($_GET['userName'] == $_SESSION['userName']) {
             $userPage = $userName;
-            header('location: profile');
         }
         $userPage = $_GET['userName'];
         $validUserPage = $mysql -> prepare("SELECT * FROM users WHERE userName = ?");

@@ -10,11 +10,11 @@ RewriteRule ^home home.php [NC]
 RewriteRule ^home/([0-9a-zA-Z_-]+) home.php/message=$1 [NC]
 
 RewriteRule ^profile profile.php [NC]
-RewriteRule ^profile/([0-9a-zA-Z_-]+) profile.php?userName=$1 [NC]
+RewriteRule ^profile/([0-9a-zA-Z_-]+) profile.php?userName=$2 [NC]
 
 RewriteRule ^login login.php
 RewriteRule ^login/([0-9a-zA-Z_-]+) login.php?error=$1 [NC]
-RewriteRule ^login/([0-9a-zA-Z_-]+)/([0-9a-zA-Z_-]+) login.php?error=$1&uID=$2 [NC]
+RewriteRule ^login/([0-9a-zA-Z_-]+)/([0-9a-zA-Z_-]+) login.php?error=$1&uID=$4 [NC]
 
 RewriteRule ^registration registration.php [NC]
 RewriteRule ^registration/([0-9a-zA-Z_-]+) registration.php/error=$1 [NC]
