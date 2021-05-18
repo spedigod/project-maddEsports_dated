@@ -1,41 +1,50 @@
 <?php 
-    // session_start();
+     # session_start();
     if (!isset($_SESSION['userName'])) {
         header('location: login.php?error=loginRequired');
         exit();
+    } else {
+        include 'includeFiles/dbh.inc.php';
+        $userName = $_SESSION['userName'];
     }
-    include_once 'includeFiles/dbh.inc.php';
-    
-    $userName = $_SESSION['userName'];
+
     if (isset($_GET['userName'])) {
         if ($_GET['userName'] == $_SESSION['userName']) {
-            $userPage = $userName;
-        }
-        $userPage = $_GET['userName'];
-        $validUserPage = $mysql -> prepare("SELECT * FROM users WHERE userName = ?");
-        $validUserPage -> bind_param('s', $userPage);
-        $validUserPage -> execute();
-        $getData = $validUserPage -> get_result();
-        if ($getData -> num_rows == 0) {
-            $valid = false;
+            $userPage = $_SESSION['userName'];
             header('location: profile.php');
         } else {
-            $valid = true;
+            $userPage = $_GET['userName'];
         }
-        $validUserPage -> close();
+         # validate user
+        $validUserName = $mysql -> prepare("SELECT * FROM `users` WHERE `userName` = ?");
+        $validUserName -> bind_param('s', $userPage);
+        $validUserName -> execute();
+        $getData = $validUserName -> get_result();
+        if ($getData -> num_rows == 0) {
+            header('location: 404.php?err=userNotFound');
+            exit();
+        } else {
+             # get any data from the user for userpage
+        }
+        $validUserName -> close();
+
     } else {
-        $userPage = $userName;
+        $userPage = $_SESSION['userName'];
     }
 
-    $stmt = $mysql -> prepare('SELECT userName FROM users WHERE userName = ?');
-    $stmt -> bind_param('s', $userPage);
-    $stmt -> execute();
-    $result = $stmt -> get_result();
-    while ($row = $result -> fetch_assoc()) {
-        $userPage = $row['userName'];
+     # are the two users friends?
+    $areFriends = $mysql -> prepare("SELECT * FROM `friends` WHERE (`friendOne` = ? OR `friendOne` = ?) AND (`friendTwo` = ? OR `friendTwo` = ?)");
+    $areFriends -> bind_param('ssss', $userName, $userPage, $userName, $userPage);
+    $areFriends -> execute();
+    $getData = $areFriends -> get_result();
+    if ($getData -> num_rows > 0) {
+        $friends = true;
+    } else {
+        $friends = false;
     }
-    $stmt -> close();
+    $areFriends -> close();
 
+    # is there a pending friend request?
     $friendRequest = $mysql -> prepare("SELECT publicRequestID FROM friendrequests WHERE requestFrom = ? AND requestTo = ?");
     $friendRequest -> bind_param('ss', $userName, $userPage);
     $friendRequest -> execute();
@@ -48,66 +57,35 @@
             $ID = $row['publicRequestID'];
         }
     }
-    $friendRequest -> close();
-
-    $areFriends = $mysql -> prepare("SELECT * FROM `friends` WHERE (`friendOne` = ? OR `friendOne` = ?) AND (`friendTwo` = ? OR `friendTwo` = ?)");
-    $areFriends -> bind_param('ssss', $userName, $userPage, $userName, $userPage);
-    $areFriends -> execute();
-    $getData = $areFriends -> get_result();
-    if ($getData -> num_rows > 0) {
-        $friends = true;
-    } else {
-        $friends = false;
-    }
-    $areFriends -> close();
-?>
+    $friendRequest -> close(); ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/default.css">
-    <title><?php 
-        if ($userName != $userPage) {
-            echo $userPage. ' | Profilja';
-        } else {
-            echo 'Saját profil';
-        }
-    ?></title>
+    <title><?php echo $userPage; ?> | Profilja</title>
 </head>
 <body>
-    <?php
-        if ($userName != $userPage) {
-            if ($_SESSION['inGroup'] == 1) {
-                    echo '<td>';
-                    echo '<form action="includeFiles/groupRequestHandler.inc.php" method="POST">';
-                    echo '<input type="hidden" name="user_id" value='. $userPage .'>';
-                    echo '<input type="hidden" name="group_id" value='. $userGroupName .'>';
-                    echo '<input type="submit" value="groupInvite">';
-                    echo '</form>';
-                    echo '</td>';
-            }
-            if ($pending == 1) {
-                echo '<p> Barátkérelem elküldve</p>';
-            }
-            if ($pending == 0) {
-                if ($friends == 1) {
-                    echo $userPage .' már a barátod';
-                    echo '<form action="includeFiles/friendDelete.inc.php" method="post">
-                            <input type="hidden" value="'. $userPage .'" name="user_id" />
-                            <button type="submit" name="friendDelete">Barát törlése</button>
+    <?php 
+        if ($userPage != $userName) {
+            if ($friends == true) {
+                echo '<p> Ez a felhasználó már a barátod </p>';
+                echo '<form action="includeFiles/friendRequestHandler.inc.php" method="post">
+                        <input type="hidden" value="'. $userPage .'" name="user_id" />
+                        <button type="submit" name="friendDelete">Barát törlése</button>
                         </form>';
-                }
-                if ($friends == 0) {
+            } elseif ($friends == false) {
+                if ($pending == true) {
+                    echo '<p> Barátkérelem elküldve!</p>';
+                    echo '<p>Barátkérelem visszavonása</p>';
+                } elseif ($pending == false) {
                     echo '<form action="includeFiles/friendRequest.inc.php" method="post">
                             <input type="hidden" value="'. $userPage .'" name="user_id" />
-                            <button type="submit" name="friendRequest">Barátnak jelölés</button>
-                        </form>';
+                            <button type="submit" name="friendRequest">Barátnak jelölés</button>';
                 }
             }
-        }
-        if ($userName == $userPage) {
+        } elseif ($userPage = $userName) {
             echo '<button><a href="includeFiles/logout.inc.php">Kilépés</a></button>';
             $requests = $mysql -> prepare("SELECT * FROM friendrequests WHERE `requestTo` = ?");
             $requests -> bind_param('s', $userName);
