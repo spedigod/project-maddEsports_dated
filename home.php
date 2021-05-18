@@ -30,7 +30,7 @@
     }
     ?>
     <button><a href="groupFinder.php">Csapatok</a></button>
-    <button><a href="profile.php?userName=<?php $userName ?>">Profil</a></button>
+    <button><a href="profile.php?userName=<?php echo $userName; ?>">Profil</a></button>
     <button><a href="userList.php">Felhasználók</a></button>
     <section>
         <table>
