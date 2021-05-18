@@ -10,7 +10,7 @@
             exit();
         } 
          //Jelszó ellenőrzése
-        $stmt = $mysql -> prepare('SELECT userPassword FROM users WHERE userName = ?');
+        $stmt = $mysql -> prepare('SELECT `userPassword` FROM `users` WHERE `userName` = ?');
         $stmt -> bind_param('s', $userName);
         $stmt -> execute();
 
@@ -31,7 +31,7 @@
         $_SESSION['userName'] = $userName;
         
          //Rang ellenőrzése
-        $stmt = $mysql -> prepare('SELECT * FROM users WHERE userName = ?');
+        $stmt = $mysql -> prepare('SELECT * FROM `users` WHERE `userName` = ?');
         $stmt -> bind_param('s', $userName);
         $stmt -> execute();
 

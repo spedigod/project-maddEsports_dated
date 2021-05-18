@@ -16,39 +16,38 @@
 </head>
 <body>
     <?php 
-    echo $userGroupName;
-        $userList = $mysql -> prepare("SELECT * FROM `users` ");
-        $userList -> execute();
-        $getData = $userList -> get_result();
-        if ($getData -> num_rows > 0) {
-            echo '<table>';
-            echo '<tr>';
-            echo '<th> Felhasználónév</th>';
-            echo '<th> Szint</th>';
-            echo '<th> Csapat</th>';
-            echo '</tr>';
-            while ($row = $getData -> fetch_assoc()) {
+        echo $userGroupName;
+            $userList = $mysql -> prepare("SELECT * FROM `users` ");
+            $userList -> execute();
+            $getData = $userList -> get_result();
+            if ($getData -> num_rows > 0) {
+                echo '<table>';
                 echo '<tr>';
-                echo '<td>';
-                echo '<a href="profile.php?userName='. $row['userName'] .'">'. $row["userName"] .'</a>';
-                echo '</td>';
-                echo '<td>';
-                echo $row['userLevel'];
-                echo '</td>';
-                echo '<td>';
-                echo $row['userGroup'];
-                echo '</td>';
-                if ($row['inGroup'] == 0) {
-                    if ($_SESSION['inGroup'] == 1) {
-                        
-                    }
-                    
-                }
+                echo '<th> Felhasználónév</th>';
+                echo '<th> Szint</th>';
+                echo '<th> Csapat</th>';
                 echo '</tr>';
+                while ($row = $getData -> fetch_assoc()) {
+                    echo '<tr>';
+                    echo '<td>';
+                    echo '<a href="profile.php?userName='. $row['userName'] .'">'. $row["userName"] .'</a>';
+                    echo '</td>';
+                    echo '<td>';
+                    echo $row['userLevel'];
+                    echo '</td>';
+                    echo '<td>';
+                    echo $row['userGroup'];
+                    echo '</td>';
+                    if ($row['inGroup'] == 0) {
+                        if ($_SESSION['inGroup'] == 1) {
+                        
+                        }
+                    }
+                    echo '</tr>';
+                }
+                echo '</table>';
             }
-            echo '</table>';
-        }
-        $userList -> close();
+            $userList -> close();
     ?>
 </body>
 </html>

@@ -3,7 +3,7 @@
     include_once 'dbh.inc.php';
     // session_start();
 
-    $stmt = $mysql -> prepare('SELECT * FROM users WHERE userName = ?');
+    $stmt = $mysql -> prepare('SELECT * FROM `users` WHERE `userName` = ?');
     $stmt -> bind_param('s', $userName);
     $stmt -> execute();
 
@@ -21,7 +21,7 @@
     $stmt -> close();
 
     if ($inGroup == 1) {
-        $stmt = $mysql -> prepare('SELECT * FROM groups WHERE groupName = ?');
+        $stmt = $mysql -> prepare('SELECT * FROM `groups` WHERE `groupName` = ?');
         $stmt -> bind_param('s', $userGroup);
         $stmt -> execute();
 

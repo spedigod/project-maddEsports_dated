@@ -101,7 +101,7 @@
             $index = rand(0, strlen($characters) - 1);
             $randomString .= $characters[$index];
         }
-        $stmt = $mysql -> prepare("SELECT publicRequestID FROM friendrequests WHERE publicRequestID = ?");
+        $stmt = $mysql -> prepare("SELECT `publicRequestID` FROM `friendrequests` WHERE `publicRequestID` = ?");
         $stmt -> bind_param('s', $randomString);
         $stmt -> execute();
 

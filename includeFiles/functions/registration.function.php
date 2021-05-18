@@ -42,7 +42,7 @@
         }
 
          //Nincs hiba
-        $stmt = $mysql -> prepare('INSERT INTO users (`userName`, `userEmail`, `userPassword`, `userFirstName`, `userLastName`, `usedRefferal`, `isAdmin`, `userLevel`, `inGroup`, `userGroup`, `isValid`, `isCoach`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt = $mysql -> prepare('INSERT INTO `users` (`userName`, `userEmail`, `userPassword`, `userFirstName`, `userLastName`, `usedRefferal`, `isAdmin`, `userLevel`, `inGroup`, `userGroup`, `isValid`, `isCoach`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $stmt -> bind_param('ssssssiiisii', $userName, $userEmail, $userPwdHashed, $userFirstName, $userLastName, $refferalCode, $isAdmin, $userLevel, $inGroup, $userGroup, $isValid, $isCoach);
         $stmt -> execute();
         /*
