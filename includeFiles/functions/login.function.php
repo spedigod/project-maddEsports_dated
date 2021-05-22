@@ -22,7 +22,7 @@
         $checkPassword = password_verify($userPassword, $userPwdHashed);
         if ($checkPassword == 0) {
            //Hiba
-          header('location: ../login.php?error=wrongPassword?uID='. $userName);
+          header('location: ../login.php?error=wrongPassword&uID='. $userName);
           exit();
         }
 
