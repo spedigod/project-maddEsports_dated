@@ -6,14 +6,33 @@
         $invaliduserName = invaliduserName($userName);
         if ( $invaliduserName == 1) {
             //Hiba
-           header('location: ../registration.php?error=inValiduserName');
+            if (isset($refferalCode)) {
+                header('location: ../registration.php?error=inValiduserName&userEmail='. $userEmail.'&userFirstName='. $userFirstName.'&userLastName='. $userLastName.'&inviteCode='. $refferalCode);
+                exit();
+            }
+           header('location: ../registration.php?error=inValiduserName&userEmail='. $userEmail.'&userFirstName='. $userFirstName.'&userLastName='. $userLastName);
            exit();
        }
-       $userExists = userExists($mysql, $userName);
-        if ($userExists == 1) {
-             //Hiba
-            header('location: ../registration.php?error=userAlreadyExists');
-            exit();
+       $userExists = userExists($mysql, $userName, $userEmail);
+         //Hiba
+        if ($userExists == "case1" || $userExists == "case2") {
+             if ($userExists == "case1") {
+                 # felh.név egyezés
+                if (!empty($refferalCode)) {
+                    header('location: ../registration.php?error=userNameAlreadyExists&userEmail='. $userEmail .'&userFirstName='. $userFirstName .'&userLastName='. $userLastName .'&inviteCode='. $refferalCode);
+                    exit();
+                }
+                header('location: ../registration.php?error=userNameAlreadyExists&userEmail='. $userEmail .'&userFirstName='. $userFirstName .'&userLastName='. $userLastName);
+                exit();
+            } elseif ($userExists == "case2") {
+                 # email egyezés
+                if (!empty($refferalCode)) {
+                    header('location: ../registration.php?error=userEmailAlreadyExists&userName='. $userName .'&userFirstName='. $userFirstName .'&userLastName='. $userLastName .'&inviteCode='. $refferalCode);
+                    exit();
+                }
+                header('location: ../registration.php?error=userEmailAlreadyExists&userName='. $userName .'&userFirstName='. $userFirstName .'&userLastName='. $userLastName);
+                exit();
+            }
         }
         $userEmailInvalid = userEmailInvalid($userEmail);
         if ($userEmailInvalid == 1) {
@@ -23,7 +42,7 @@
         }
 
         if (!empty($refferalCode)) {
-            $testRefferal = $mysql -> prepare("SELECT * FROM refferals WHERE refferalCode = ?");
+            $testRefferal = $mysql -> prepare("SELECT * FROM `refferals` WHERE `refferalCode` = ?");
             $testRefferal -> bind_param('s', $refferalCode);
             $testRefferal -> execute();
             $getData = $testRefferal -> get_result();
@@ -39,6 +58,8 @@
                 }
             }
             $testRefferal -> close();
+            header('location: ../registration.php?error=invalidRefferalCode&userName='. $userName .'&userFirstName='. $userFirstName .'&userLastName='. $userLastName .'&userEmail='. $userEmail);
+            exit();
         }
 
          //Nincs hiba
@@ -55,8 +76,10 @@
         $n = 10;
         getRefferalCode($n, $mysql, $userName, $refferalCode);
 
-        header('location: ../login.php?error=success?uID='. $userName);
-        exit();
+        $level = 1;
+        $experiencePoints = 1000;
+        $userExp = 0;
+        setUserLevel($mysql, $userName, $level, $userExp, $experiencePoints);
 
         
 
