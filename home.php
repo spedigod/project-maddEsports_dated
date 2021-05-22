@@ -2,8 +2,8 @@
     // session_start();
 
     if (isset($_SESSION['userName'])) {
-        // header('location: includeFiles\redirecter.inc.php');
         $userName = $_SESSION['userName'];
+        include 'includeFiles\main.includes.php';
     } else {
         header('location: login.php');
     }
@@ -48,17 +48,19 @@
                     switch ($friend) {
                         case $userName:
                             echo '<tr>
-                                    <th>'. $row["friendTwo"];
+                                    <th>'. $row["friendTwo"]. '</th></tr>';
                             break;
                         default:
                         echo '<tr>
-                                <th>'. $row["friendOne"];
+                                <th>'. $row["friendOne"]. '</th></tr>';
                     }
                 }
             }
             $friendList -> close();
         ?>
         </table>
+         <!-- dropdown menübe kell rakni -->
+        <p><?php echo $_SESSION['notification'] .' új értesítése van!'; ?></p>
     </section>
 </body>
 </html>
