@@ -1,12 +1,14 @@
 <?php
 
-    require 'functions/login.function.php';
-
+    require 'dbh.inc.php';
+    
     if (!isset($_POST['loginSubmit'])) {
          //Hiba
         header('location: ../login.php?error=loginRequired');
         exit();
     } 
+
+        require 'functions/login.function.php';
         
         $userName = $_POST['userName'];
         $userPassword = $_POST['userPassword'];
@@ -18,7 +20,7 @@
             exit();
         } elseif (empty($userPassword)) {
              //Hiba
-            header('location: ../login.php?error=emtpyPasswordField?uID='. $userName);
+            header('location: ../login.php?error=emtpyPasswordField&uID='. $userName);
             exit();
         } 
              
