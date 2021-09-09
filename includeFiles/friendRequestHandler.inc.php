@@ -3,11 +3,11 @@
 if (isset($_POST['requestAccept'])) {
     include 'dbh.inc.php';
 
-    $friendTwo = $_SESSION['userName'];
+    $friendTwo = $_SESSION['user_id'];
     $friendOne = $_POST['request_from'];
     $publicRequestID = $_POST['request_id'];
 
-    $addFriend = $mysql -> prepare("INSERT INTO `friends` (`friendOne`, `friendTwo`)
+    $addFriend = $mysql -> prepare("INSERT INTO `friends` (`friend1_id`, `friend2_id`)
                                         VALUES (?, ?)");
     $addFriend -> bind_param('ss', $friendOne, $friendTwo);
     $addFriend -> execute();
@@ -39,16 +39,16 @@ if (isset($_POST['requestAccept'])) {
 } else if (isset($_POST['friendDelete'])) {
     include 'dbh.inc.php';
 
-    $userName = $_SESSION['userName'];
+    $user = $_SESSION['user_id'];
     $userPage = $_POST['user_id'];
     
-    $deleteFriend = $mysql -> prepare("DELETE FROM `friends` WHERE (`friendOne` = ? OR `friendOne` = ?) 
-                                        AND (`friendTwo` = ? OR `friendTwo` = ?)");
-    $deleteFriend -> bind_param('ssss', $userPage, $userName, $userPage, $userName);
+    $deleteFriend = $mysql -> prepare("DELETE FROM `friends` WHERE (`friend1_id` = ? OR `friend1_id` = ?) 
+                                        AND (`friend2_id` = ? OR `friend2_id` = ?)");
+    $deleteFriend -> bind_param('ssss', $userPage, $user, $userPage, $user);
     $deleteFriend -> execute();
     $deleteFriend -> close();
     
-    header('location: ../profile.php?userName='. $userPage);
+    header('location: ../profile.php?ID='. $user);
     exit();
 } else {
     header('location: ../profile.php');

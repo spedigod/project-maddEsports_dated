@@ -3,17 +3,18 @@
         header('location: ../profile.php');
         exit();
     }
-    if (!isset($_SESSION['userName'])) {
+    if (!isset($_SESSION['user_id'])) {
         header('location: ../login.php?error=loginRequired');
         exit();
     }
     include 'functions/main.function.php';
+    require 'dbh.inc.php';
 
-    $requestFrom = $_SESSION['userName'];
-    $requestTo = $_POST['user_id'];
+    $requestFrom = $_SESSION['user_id'];
+    $requestTo = $_POST['to_id'];
     $publicRequestID = createUniqueID($mysql);
 
-    $friendRequest = $mysql -> prepare('INSERT INTO `friendrequests` (`requestFrom`, `requestTo`, `publicRequestID`)
+    $friendRequest = $mysql -> prepare('INSERT INTO `friendrequests` (`from_id`, `to_id`, `publicRequestID`)
                                     VALUES (?, ?, ?)');
     $friendRequest -> bind_param('sss', $requestFrom, $requestTo, $publicRequestID);
     $friendRequest -> execute();
@@ -22,5 +23,5 @@
     }
     $friendRequest -> close();
 
-    header('location: ../profile.php?userName='. $requestTo);
+    header('location: ../profile.php?ID='. $requestTo);
     exit();

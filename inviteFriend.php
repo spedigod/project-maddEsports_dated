@@ -1,11 +1,11 @@
 <?php 
     // session_start();
-    if (!isset($_SESSION['userName'])) {
+    if (!isset($_SESSION['user_id'])) {
         header('location: login.php?error=loginRequired');
         exit();
     }
-    $userName = $_SESSION['userName'];
-    findRefferal($mysql, $userName);
+    $user_id = $_SESSION['user_id'];
+    findRefferal($mysql, $user_id);
 
 ?>
 <!DOCTYPE html>

@@ -1,10 +1,21 @@
 <?php 
-    // session_start();
-    if (!isset($_SESSION['userName'])) {
-        header('location: login.php?error=loginRequired');
+    
+    require 'includeFiles/profileQuery.inc.php';
+
+    if ($isAdmin == 0) {
+        header('location: home.php?ID='. $_SESSION['user_id']);
     }
-    include 'includeFiles/dbh.inc.php';
-    $userGroupName = $_SESSION['userGroup'];
+    $admin_id = $_SESSION['user_id'];
+
+    $isAdmin = $mysql -> prepare("SELECT * FROM `administration` WHERE `user_id` = ?");
+    $isAdmin -> bind_param('s', $admin_id);
+    $isAdmin -> execute();
+    $getData = $isAdmin -> get_result();
+        if ($getData -> num_rows == 0) {
+            header('location: home.php?ID='. $_SESSION['user_id']);
+            exit();
+        }
+    $isAdmin -> close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,8 +27,7 @@
 </head>
 <body>
     <?php 
-        echo $userGroupName;
-            $userList = $mysql -> prepare("SELECT * FROM `users` ");
+            $userList = $mysql -> prepare("SELECT `user_id`,`userName`,`inGroup`,`userLevel` FROM `users`");
             $userList -> execute();
             $getData = $userList -> get_result();
             if ($getData -> num_rows > 0) {
@@ -30,18 +40,22 @@
                 while ($row = $getData -> fetch_assoc()) {
                     echo '<tr>';
                     echo '<td>';
-                    echo '<a href="profile.php?userName='. $row['userName'] .'">'. $row["userName"] .'</a>';
+                    echo '<a href="profile.php?ID='. $row['user_id'] .'">'. $row["userName"] .'</a>';
                     echo '</td>';
                     echo '<td>';
                     echo $row['userLevel'];
                     echo '</td>';
                     echo '<td>';
-                    echo $row['userGroup'];
+                    if (!empty($row['userGroup'])) {
+                        echo $row['userGroup'];
+                    }
                     echo '</td>';
-                    if ($row['inGroup'] == 0) {
-                        if ($_SESSION['inGroup'] == 1) {
-                        
+                    if ($_SESSION['inGroup'] == 1) {
+                        echo '<td>';
+                        if ($row['inGroup'] == 0) {
+                            echo '<a href=""><button>Meghívás csapatba</button></a>';
                         }
+                        echo '</td>';
                     }
                     echo '</tr>';
                 }

@@ -1,8 +1,3 @@
-<?php
-    if (isset($_GET['uID'])) {
-        $userName = $_GET['uID'];
-    }
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,13 +8,18 @@
 </head>
 <body>
     <form action="includeFiles/registration.inc.php" method="post">
-        <input type="text" value="<?php if (isset($_GET['userName'])) {echo $_GET['userName'];} ?>" name="userName" id="userName" placeholder="username" required>
-        <input type="email" value="<?php if (isset($_GET['userEmail'])) {echo $_GET['userEmail'];} ?>" name="userEmail" id="userEmail" placeholder="email">
+        <input type="text" value="<?php if (isset($_GET['userName'])) {echo $_GET['userName'];} ?>" name="userName" id="userName" placeholder="username">
+
+        <input type="text" value="<?php if (isset($_GET['userEmail'])) {echo $_GET['userEmail'];} ?>" name="userEmail" id="userEmail" placeholder="email">
+
         <input type="password" name="userPassword" id="userPassword" placeholder="password">
         <input type="password" name="passwordCheck" id="passwordCheck" placeholder="password again">
+
         <input type="text" value="<?php if (isset($_GET['userFirstName'])) {echo $_GET['userFirstName'];} ?>" name="userFirstName" id="userFirstName" placeholder="first name">
         <input type="text" value="<?php if (isset($_GET['userLastName'])) {echo $_GET['userLastName'];} ?>" name="userLastName" id="userLastName" placeholder="last name">
+
         <input type="text" value="<?php if (isset($_GET['inviteCode'])) {echo $_GET['inviteCode'];} ?>" name="refferalCode" id="refferalCode" placeholder="Refferal code (optional)">
+        
         <input type="submit" name="regSubmit" id="regSubmit">
     </form>
 </body>

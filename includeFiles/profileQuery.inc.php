@@ -1,10 +1,8 @@
 <?php
+    require_once 'dbh.inc.php';
 
-    include_once 'dbh.inc.php';
-    // session_start();
-
-    $stmt = $mysql -> prepare('SELECT * FROM `users` WHERE `userName` = ?');
-    $stmt -> bind_param('s', $userName);
+    $stmt = $mysql -> prepare('SELECT * FROM `users` WHERE `user_id` = ?');
+    $stmt -> bind_param('s', $_SESSION['user_id']);
     $stmt -> execute();
 
     $result = $stmt -> get_result();
@@ -13,10 +11,11 @@
         $userEmail = $row['userEmail'];
         $userFirstName = $row['userFirstName'];
         $userLastName = $row['userLastName'];
-        $userLevel = $row['userLevel'];
         $isAdmin = $row['isAdmin'];
         $inGroup = $_SESSION['inGroup'] = $row['inGroup'];
-        $_SESSION['userGroup'] = $userGroup = $row['userGroup'];
+        if (!empty($row['userGroup'])) {
+            $_SESSION['userGroup'] = $userGroup = $row['userGroup'];
+        }
     }
     $stmt -> close();
 
@@ -28,20 +27,26 @@
         $result = $stmt -> get_result();
         while ($row = $result -> fetch_assoc()) {
             $groupName = $row['groupName'];
+            $groupAdmin = $row['leader_id'];
             $groupLogo = $row['groupLogo'];
-            $groupAdmin = $row['groupAdmin'];
             $groupGame = $row['groupGame'];
-            $groupMember1 = $row['groupMember1'];
-            $groupMember2 = $row['groupMember2'];
-            $groupMember3 = $row['groupMember3'];
-            $groupMember4 = $row['groupMember4'];
-            $groupMember5 = $row['groupMember5'];
+            $groupMember1 = $row['member1_id'];
+            $groupMember2 = $row['member2_id'];
+            $groupMember3 = $row['member3_id'];
+            $groupMember4 = $row['member4_id'];
+            $groupMember5 = $row['member5_id'];
         }
         $stmt -> close();
     }
 
-    $adminQuery = $mysql -> prepare("SELECT * From `administration` WHERE `adminEmail` = ?");
-    $adminQuery -> bind_param('s', $userEmail);
+    if (file_exists('images\profileImage\profile.'. $_SESSION['user_id'] .'.png')) {
+        $_SESSION['imageName'] = 'profile.'. $_SESSION['user_id'] .'.png';
+    } else {
+        $_SESSION['imageName'] = 'profileDefault.png';
+    }
+
+    $adminQuery = $mysql -> prepare("SELECT * From `administration` WHERE `user_id` = ?");
+    $adminQuery -> bind_param('s', $_SESSION['user_id']);
     $adminQuery -> execute();
     $getData = $adminQuery -> get_result();
     if ($getData -> num_rows > 0) {

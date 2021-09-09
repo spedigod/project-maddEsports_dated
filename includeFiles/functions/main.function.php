@@ -1,14 +1,24 @@
 <?php 
 
     function invaliduserName($userName) {
-        $result;
-        if (!preg_match("/^[a-zA-Z0-9]*$/", $userName)) {
-          $result = true;
-        } else {
-          $result = false;
-        }
-        return $result;
+      $result = true;
+      if (!preg_match("/^[a-zA-Z0-9]*$/", $userName)) {
+        $result = true;
+      } else {
+        $result = false;
       }
+      return $result;
+    }
+    
+    function invalidName($userFirstName, $userLastName) {
+      $result = true;
+      if ((!preg_match("/^[a-zA-Z]*$/", $userFirstName)) && (!preg_match("/^[a-zA-Z]*$/", $userLastName))) {
+        $result = true;
+      } else {
+        $result = false;
+      }
+      return $result;
+    }
       
     function userExists($mysql, $userName, $userEmail) {
       $userExists = $mysql -> prepare("SELECT `userName`, `userEmail` FROM `users` WHERE `userName` = ? OR `userEmail`= ?");
@@ -33,17 +43,25 @@
       exit();
     }
     
-      function userEmailInvalid($userEmail) {
-        $result;
-        if (!filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
-          $result = true;
-        } else {
-          $result = false;
-        }
-        return $result;
+    function userEmailInvalid($userEmail) {
+      $result = true;
+      if (!filter_var($userEmail, FILTER_VALIDATE_EMAIL)) {
+        $result = true;
+      } else {
+        $result = false;
       }
+      return $result;
+    }
 
-    function userLogCheck($mysql, $userName, $userPassword) {
+    function pwdLength($userPassword) {
+      if (strlen($userPassword) < 8) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    function userLogCheck($mysql, $userName) {
         $userLogCheck = $mysql -> prepare('SELECT `userName` FROM `users` WHERE `userName` = ?');
         $userLogCheck -> bind_param('s', $userName);
 
@@ -64,7 +82,59 @@
         exit();
     }
 
-    function getRefferalCode($n, $mysql, $userName, $refferalCode) {
+    function generateUserID($mysql) {
+      $n = 10;
+      $a = 1;
+      while ($a = 1) {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+    
+        for ($i = 0; $i < $n; $i++) {
+            $index = rand(0, strlen($characters) - 1);
+            $randomString .= $characters[$index];
+        }
+        $user_id = $randomString;
+        $getUID = $mysql -> prepare("SELECT * FROM `users` WHERE `user_id` = ?");
+        $getUID -> bind_param('s', $user_id);
+        $getUID -> execute();
+
+        $getData = $getUID -> get_result();
+        if ($getData -> num_rows == 0) {
+            break;
+        }
+        $getUID -> close();
+      }
+      $_SESSION['user_id'] = $user_id;
+      return $_SESSION['user_id'];
+    }
+
+    function generateEventID($mysql) {
+      $n = 15;
+      $a = 1;
+      while ($a = 1) {
+        $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456789';
+        $randomString = '';
+    
+        for ($i = 0; $i < $n; $i++) {
+            $index = rand(0, strlen($characters) - 1);
+            $randomString .= $characters[$index];
+        }
+        $eventID = $randomString;
+        $getEventID = $mysql -> prepare("SELECT * FROM `events` WHERE `event_id` = ?");
+        $getEventID -> bind_param('s', $eventID);
+        $getEventID -> execute();
+
+        $getData = $getEventID -> get_result();
+        if ($getData -> num_rows == 0) {
+            break;
+        }
+        $getEventID -> close();
+      }
+      $_SESSION['eventID'] = $eventID;
+      return $_SESSION['eventID'];
+    }
+
+    function generateRefferalCode($mysql, $user_id, $refferalCode) {
       $n = 10;
       $a = 1;
       while ($a = 1) {
@@ -86,15 +156,20 @@
         }
         $getRefferalCode -> close();
       }
-      $stmt = $mysql -> prepare("INSERT INTO `refferals` (`userName`, `refferalCode`) 
+      $stmt = $mysql -> prepare("INSERT INTO `refferals` (`user_id`, `refferalCode`) 
       VALUES (?, ?)");
-      $stmt -> bind_param('ss', $userName, $refferalCode);
+      $stmt -> bind_param('ss', $user_id, $refferalCode);
       $stmt -> execute();
       $stmt -> close();   
     }
-    function setUserLevel($mysql, $userName, $level, $userExp, $experiencePoints) {
-      $setLevel = $mysql -> prepare('INSERT INTO `userlevel`(`userName`, `userLevel`, `userExp`, `experiencePoints`) VALUES (?, ?, ?, ?)');
-      $setLevel -> bind_param('siii', $userName, $level, $userExp, $experiencePoints);
+
+    function setUserLevel($mysql, $user_id) {
+      $userLevel = 1;
+      $userExp = 0;
+      $experiencePoints = 1000;
+
+      $setLevel = $mysql -> prepare('INSERT INTO `userlevel`(`user_id`, `userLevel`, `userExp`, `experiencePoints`) VALUES (?, ?, ?, ?)');
+      $setLevel -> bind_param('siii', $user_id, $userLevel, $userExp, $experiencePoints);
       $setLevel -> execute();
       $setLevel -> close();
 
@@ -111,14 +186,32 @@
             $index = rand(0, strlen($characters) - 1);
             $randomString .= $characters[$index];
         }
-        $stmt = $mysql -> prepare("SELECT `publicRequestID` FROM `friendrequests` WHERE `publicRequestID` = ?");
-        $stmt -> bind_param('s', $randomString);
-        $stmt -> execute();
+        $getRequestID = $mysql -> prepare("SELECT `publicRequestID` FROM `friendrequests` WHERE `publicRequestID` = ?");
+        $getRequestID -> bind_param('s', $randomString);
+        $getRequestID -> execute();
 
-        $getData = $stmt -> get_result();
+        $getData = $getRequestID -> get_result();
         if ($getData -> num_rows == 0) {
             break;
         }
+        $getRequestID -> close();
       }
       return $randomString;
+    }
+
+    function changeName($mysql, $newName, $oldName, $user_id) {
+      $changeData = $mysql -> prepare("UPDATE `users` SET `userName`= ? WHERE `user_id` = ?");
+      $changeData -> bind_param('ss', $newName, $user_id);
+      $changeData -> execute();
+      if (!$changeData -> execute()) {
+        header('location: ../profileEdit.php?ID='. $user_id . '&error=usernameAlreadyTaken');
+        exit();
+      }
+      $changeData -> close();
+
+       # disable username change for 30 days !!!Awaiting for implementing!!!!
+      $disableChange = $mysql -> prepare("INSERT INTO `changedname` (user_id, new_name, old_name) VALUES (?, ?, ?)");
+      $disableChange -> bind_param('sss', $user_id, $newName, $oldName);
+      $disableChange -> execute();
+      $disableChange -> close();
     }

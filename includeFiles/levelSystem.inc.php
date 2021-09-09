@@ -39,13 +39,13 @@
                 $newExpPoints = 1000;
                 break;
         }
-        $setLevel = $mysql -> prepare("UPDATE `userLevel` SET `userLevel` = ?, `userExp` = ?, `experiencePoints` = ? WHERE `userName` = ?");
-        $setLevel -> bind_param('iiis', $newUserLevel, $expReset, $newExpPoints, $userName);
+        $setLevel = $mysql -> prepare("UPDATE `userLevel` SET `userLevel` = ?, `userExp` = ?, `experiencePoints` = ? WHERE `user_id` = ?");
+        $setLevel -> bind_param('iiis', $newUserLevel, $expReset, $newExpPoints, $user_id);
         $setLevel -> execute();
         $setLevel -> close();
          # get user level after updating
-        $setUserLevel = $mysql -> prepare("SELECT * FROM `userLevel` WHERE `userName` = ?");
-        $setUserLevel -> bind_param('s', $userName);
+        $setUserLevel = $mysql -> prepare("SELECT * FROM `userLevel` WHERE `user_id` = ?");
+        $setUserLevel -> bind_param('s', $user_id);
         $setUserLevel -> execute();
         $getData = $setUserLevel -> get_result();
         if ($getData -> num_rows > 0) {

@@ -1,10 +1,23 @@
 <?php 
     
-    //include 'includeFiles/validateUser.php';
+    require 'includeFiles/profileQuery.inc.php';
 
     if ($isAdmin == 0) {
-        header('location: home.php?userName='. $userName);
+        header('location: home.php?ID='. $_SESSION['user_id']);
     }
+    $admin_id = $_SESSION['user_id'];
+
+    $grabAdminLevel = $mysql -> prepare("SELECT `adminLevel` FROM `administration` WHERE `user_id` = ?");
+    $grabAdminLevel -> bind_param('s', $admin_id);
+    $grabAdminLevel -> execute();
+    $getData = $grabAdminLevel -> get_result();
+        if ($getData -> num_rows > 0) {
+            while ($row = $getData -> fetch_assoc()) {
+                $adminLevel = $row['adminLevel'];
+            }
+        }
+    $grabAdminLevel -> close();
+
     if ($adminLevel == 1) {
         $adminName = 'CEO';
     } elseif ($adminLevel == 2) {
@@ -39,6 +52,12 @@
     <?php 
         if ($adminLevel == 1 || $adminLevel == 2 || $adminLevel == 3) {
            echo '<button><a href="addModerator.php">Új admin hozzáadása</a></button>';
+           echo '<button><a href="eventCreator.php">Hozz létre új eseményt</a></button>';
+        }
+    ?>
+    <?php 
+        if ($adminLevel == 1 || $adminLevel == 2) {
+           echo '    <button><a href="userList.php">Felhasználók</a></button>';
         }
     ?>
 </body>
