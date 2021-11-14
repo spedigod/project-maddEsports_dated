@@ -180,15 +180,15 @@ if (isset($_POST['createEvent'])) {
         if ($_POST['checkIn'] == "0mins") {
              $checkIn = date('Y-m-d h:i', strtotime($_POST['eventStart']));
         } elseif ($_POST['checkIn'] == "15mins") {
-             $checkIn = date('Y-m-d h:i', strtotime($_POST['eventStart']) - 900);
+             $checkIn = date('Y-m-d h:i', strtotime('15 minutes', strtotime($_POST['eventStart'])));
         } elseif ($_POST['checkIn'] == "30mins") {
-            echo $checkIn = date('Y-m-d h:i', strtotime($_POST['eventStart']) - 1800);
+            echo $checkIn = date('Y-m-d h:i', strtotime('30 minutes', strtotime($_POST['eventStart'])));
         } elseif ($_POST['checkIn'] == "45mins") {
-             $checkIn = date('Y-m-d h:i', strtotime($_POST['eventStart']) - 2700);
+             $checkIn = date('Y-m-d h:i', strtotime('45 minutes', strtotime($_POST['eventStart'])));
         } elseif ($_POST['checkIn'] == "1hour") {
-             $checkIn = date('Y-m-d h:i', strtotime($_POST['eventStart']) - 3600);
+             $checkIn = date('Y-m-d h:i', strtotime('1 hour', strtotime($_POST['eventStart'])));
         } else {
-             $checkIn = date('Y-m-d h:i', strtotime($_POST['eventStart']) - 900);
+             $checkIn = date('Y-m-d h:i', strtotime('15 minutes', strtotime($_POST['eventStart'])));
         }
     }
 

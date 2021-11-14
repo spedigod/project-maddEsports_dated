@@ -43,6 +43,12 @@
         $setLevel -> bind_param('iiis', $newUserLevel, $expReset, $newExpPoints, $user_id);
         $setLevel -> execute();
         $setLevel -> close();
+
+        $setUserLevelCount = $mysql -> prepare("UPDATE `userData` SET `levelCount` = ? WHERE `user_id` = ?");
+        $setUserLevelCount -> bind_param('ss', $newUserLevel, $_SESSION['user_id']);
+        $setUserLevelCount -> execute();
+        $setUserLevelCount -> close();
+        
          # get user level after updating
         $setUserLevel = $mysql -> prepare("SELECT * FROM `userLevel` WHERE `user_id` = ?");
         $setUserLevel -> bind_param('s', $user_id);

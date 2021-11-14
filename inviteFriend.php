@@ -4,8 +4,20 @@
         header('location: login.php?error=loginRequired');
         exit();
     }
+    require 'includeFiles/dbh.inc.php';
     $user_id = $_SESSION['user_id'];
-    findRefferal($mysql, $user_id);
+
+    $getRefferal = $mysql -> prepare("SELECT * FROM `refferals` WHERE `user_id` = ?");
+    $getRefferal -> bind_param('s', $user_id);
+    $getRefferal -> execute();
+    $result = $getRefferal -> get_result();
+    if ($result -> num_rows > 0) {
+        while ($row = $result -> fetch_assoc()) {
+            $userRefferal = $row['refferalCode'];
+            $refferalScore = $row['refferalScore'];
+        }
+    }
+    $getRefferal -> close();
 
 ?>
 <!DOCTYPE html>
@@ -17,6 +29,7 @@
     <title>Invite Your Friends</title>
 </head>
 <body>
-    
+    <p>Hívd meg barátaidat! Minden kódoddal történő regisztráció után pontokat kapsz amit késöbb majd beválthatsz.</p>
+    <p>http://localhost/project-maddEsports/registration.php?inviteCode=<?=$userRefferal?></p>
 </body>
 </html>

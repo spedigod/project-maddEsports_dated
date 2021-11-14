@@ -48,6 +48,12 @@
 </head>
 <body>
     <?php
+        // 0 = upcoming
+        // 1 = soon
+        // 2 = check-in
+        // 3 = starting soon
+        // 4 = live
+        // 5 = ended
         $eventLister = $mysql -> prepare("SELECT * FROM `events` ORDER BY `dateOfStart` DESC");
         $eventLister -> execute();
         $eventList = $eventLister -> get_result();
@@ -68,13 +74,15 @@
                     echo '<td style="width:130px">';
                     if ($row['eventStatus'] == 0) {
                         echo '<p>'. date('l \a\t g:ia T', strtotime($row['dateOfStart'])) .'</p>';
+                    } elseif ($row['eventStatus'] == 1) {
+                        echo '<p style="color:white;font-weight:300;font-style:italic">Soon<br/></p>';
                     } elseif ($row['eventStatus'] == 2) {
                         echo '<p style="color:gold;font-weight:600;font-style:italic">Check-in <br/>'. date('i \M\i\n\s', (strtotime($row['dateOfStart']) - strtotime('now'))) .'</p>';
                     } elseif ($row['eventStatus'] == 3) {
                         echo '<p style="color:orange;font-weight:600;font-style:italic">Starting soon<br/></p>';
                     } elseif ($row['eventStatus'] == 4) {
                         echo '<p style="font-size:20px;letter-spacing:2px;color:green;font-weight:800">Live •<br/></p>';
-                    }
+                    };
                     echo '</td>';
                     echo '</tr>';
                     echo '</table></a>';
@@ -90,7 +98,7 @@
                     echo '<p><a class="title">'. $row['eventTitle'] .'</a><br/><a style="padding-left: 10px;color: #8D92A5;font-style: italic;">'. $row['eventDescriptionS'] .'</a></p>';
                     echo '</td>';
                     echo '<td style="width:130px">';
-                    echo '<p style="color:red;font-weight:bold">Ended</p>';
+                    echo '<p style="font-size:22px;letter-spacing:1px;color:red;font-weight:600"">Ended</p>';
                     echo '</td>';
                     echo '</tr>';
                     echo '</table></a>';

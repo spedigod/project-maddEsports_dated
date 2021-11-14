@@ -1,0 +1,13 @@
+<dl>
+	<ul>
+    	<li>Must be validated to enter</li>
+        <li>6v6 with normal settings</li>
+        <li>killcam disabled</li>
+        <li>check-in 45minutes before tournament</li>
+    
+    </ul>
+  <dt>Coffee</dt>
+  <dd>- black hot drink</dd>
+  <dt>Milk</dt>
+  <dd>- white cold drink</dd>
+</dl>

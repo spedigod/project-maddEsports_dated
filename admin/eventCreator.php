@@ -7,7 +7,15 @@
     <title>Create new event</title>
 </head>
 <body>
-    <form action="includeFiles/eventCreator.inc.php" method="POST" enctype="multipart/form-data">
+    <?php 
+        // 0 = upcoming
+        // 1 = soon
+        // 2 = check-in
+        // 3 = starting soon
+        // 4 = live
+        // 5 = ended
+    ?>
+    <form action="../includeFiles/eventCreator.inc.php" method="POST" enctype="multipart/form-data">
         <label for="eventTitle">Title</label><br />
         <input type="text" name="eventTitle" id="eventTitle" title="eventTitle"><br /><br />
 

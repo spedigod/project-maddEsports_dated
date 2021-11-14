@@ -1,24 +1,23 @@
 <?php  
+
+    if (!isset($_POST['teamSettingSubmit'])) {
+        header('location: groups.php');
+        exit();
+    }
     if (!isset($_SESSION['user_id'])) {
         header('location: login.php');
-    } if (isset($_POST['user_id'])) {
-        if ($_SESSION['user_id'] != $_POST['user_id']) {
-            var_dump($_GET['ID']);
-            exit();
-        }
-    } elseif (isset($_GET['ID'])) {
-        if ($_SESSION['user_id'] != $_GET['ID']) {
-            header('location: profile.php');
-            exit();
-        }
+        exit();
+    } if (isset($_POST['team_id'])) {
+        
     } else {
-        header('location: profile.php');
+        header('location: groups.php');
         exit();
     }
 
     require_once 'includeFiles/profileQuery.inc.php';
     require_once 'includeFiles/functions/main.function.php';
     $user_id = $_SESSION['user_id'];
+    $team_id = $_SESSION['team_id'] = $_POST['team_id'];
 
 ?>
 <!DOCTYPE html>
@@ -27,7 +26,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title><?php echo $userName. ' | módosítás' ?></title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+        <title><?php echo 'Csapat módosítás' ?></title><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>        
 		<link rel="stylesheet" href="https://unpkg.com/dropzone/dist/dropzone.css" />
@@ -92,7 +91,7 @@
 	<body>
 		<div class="container" align="center">
 			<br />
-			<h3 align="center">Profil módosítása</h3>
+			<h3 align="center">Csapat Beállítások</h3>
 			<br />
 			<div class="row">
 				<div class="col-md-4">&nbsp;</div>
@@ -100,9 +99,9 @@
 					<div class="image_area">
 						<form method="post">
 							<label for="upload_image">
-								<img src="<?php if (file_exists('images/profileImage/profile.'. $user_id .'.png')) {echo 'images/profileImage/profile.'. $user_id .'.png';} else {echo 'images/profileImage/profile.default.png';}?>" id="uploaded_image" class="img-responsive img-circle" />
+								<img src="<?php if (file_exists('images/teamImages/logo/logo.'. $team_id .'.png')) {echo 'images/teamImages/logo/logo.'. $team_id .'.png';} else {echo 'images/teamImages/logo/logo.default.png';}?>" id="uploaded_image" class="img-responsive img-circle" />
 								<div class="overlay">
-									<div class="text">Click to Change Profile Image</div>
+									<div class="text">Click to Change Team logo</div>
 								</div>
 								<input type="file" name="image" class="image" id="upload_image" style="display:none" />
 							</label>
@@ -139,101 +138,84 @@
 			</div>
 		</div>
 		<div class="container" align="center">
-			<form action="includeFiles/profileEdit.inc.php" method="post">
-				<input type="text" name="username_reset" id="username_reset" value="<?php echo $userName ?>">
-				<input type="hidden" name="username" id="username" value="<?php echo $userName ?>">
-				<br />
-
-				<input type="text" name="email_reset" id="email_reset" value="<?php echo $userEmail ?>">
-				<br />
-
-
-				<input type="password" name="password_old" id="password_old" placeholder="Old password">
-				<br />
-				<input type="password" name="password_reset" id="password_reset" placeholder="New password">
-				<br />
-				<input type="password" name="password2_reset" id="password2_reset" placeholder="New password again">
-				<br />
-
-
-				<input type="text" name="firstname_reset" id="firstname_reset" value="<?php echo $userFirstName ?>">
-				<input type="text" name="lastname_reset" id="lastname_reset" value="<?php echo $userLastName ?>">
-				<br />
-
+			<form action="includeFiles/teamSettings.inc.php" method="post">
+                <Select>
+                    <option value=""></option>
+                    <option value=""></option>
+                    <option value=""></option>
+                    <option value=""></option>
+                </Select>
 					
-				<button type="submit" id="profile_reset_submit" name="profile_reset_submit">név módosítása</button>
+				<button type="submit" id="profile_reset_submit" name="team_setting_submit"></button>
 			</form> 
 		</div>
 	</body>
-</html>
+    <script>
+        $(document).ready(function(){
 
-<script>
+            var $modal = $('#modal');
 
-$(document).ready(function(){
+            var image = document.getElementById('sample_image');
 
-	var $modal = $('#modal');
+            var cropper;
 
-	var image = document.getElementById('sample_image');
+            $('#upload_image').change(function(event){
+                var files = event.target.files;
 
-	var cropper;
+                var done = function(url){
+                    image.src = url;
+                    $modal.modal('show');
+                };
 
-	$('#upload_image').change(function(event){
-		var files = event.target.files;
+                if(files && files.length > 0)
+                {
+                    reader = new FileReader();
+                    reader.onload = function(event)
+                    {
+                        done(reader.result);
+                    };
+                    reader.readAsDataURL(files[0]);
+                }
+            });
 
-		var done = function(url){
-			image.src = url;
-			$modal.modal('show');
-		};
+            $modal.on('shown.bs.modal', function() {
+                cropper = new Cropper(image, {
+                    aspectRatio: 1,
+                    viewMode: 3,
+                    preview:'.preview'
+                });
+            }).on('hidden.bs.modal', function(){
+                cropper.destroy();
+                cropper = null;
+            });
 
-		if(files && files.length > 0)
-		{
-			reader = new FileReader();
-			reader.onload = function(event)
-			{
-				done(reader.result);
-			};
-			reader.readAsDataURL(files[0]);
-		}
-	});
+            $('#crop').click(function(){
+                canvas = cropper.getCroppedCanvas({
+                    width:400,
+                    height:400
+                });
 
-	$modal.on('shown.bs.modal', function() {
-		cropper = new Cropper(image, {
-			aspectRatio: 1,
-			viewMode: 3,
-			preview:'.preview'
-		});
-	}).on('hidden.bs.modal', function(){
-		cropper.destroy();
-   		cropper = null;
-	});
-
-	$('#crop').click(function(){
-		canvas = cropper.getCroppedCanvas({
-			width:400,
-			height:400
-		});
-
-		canvas.toBlob(function(blob){
-			url = URL.createObjectURL(blob);
-			var reader = new FileReader();
-			reader.readAsDataURL(blob);
-			reader.onloadend = function(){
-				var base64data = reader.result;
-				$.ajax({
-					url:'includeFiles/profileEdit.inc.php',
-					method:'POST',
-					data:{image:base64data},
-					success:function(data)
-					{
-						window.location.href = "profile.php?", Math.random();
-						$modal.modal('hide');
-						$('#uploaded_image').attr('src', data);
-					}
-				});
-			};
-		});
-	});
-	
-});
-</script>
+                canvas.toBlob(function(blob){
+                    url = URL.createObjectURL(blob);
+                    var reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    reader.onloadend = function(){
+                        var base64data = reader.result;
+                        $.ajax({
+                            url:'includeFiles/teamSettings.inc.php',
+                            method:'POST',
+                            data:{image:base64data},
+                            success:function(data)
+                            {
+                                window.location.href = "group.php?file_upload=success";
+                                $modal.modal('hide');
+                                $('#uploaded_image').attr('src', data);
+                            }
+                        });
+                    };
+                });
+            });
+            
+        });
+    </script>
 </html>

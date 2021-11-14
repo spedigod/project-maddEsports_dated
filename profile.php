@@ -111,7 +111,6 @@
     }
     $friendRequest -> close(); 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -126,7 +125,41 @@
         <title><?php echo $userName; ?> | Profilja</title>
     </head>
     <body style="background: #011627">
-        <?php 
+        <?php
+            //Achievement handler
+            echo '<ul>';
+            $grabAchievements = $mysql -> prepare("SELECT * FROM `userachievements` WHERE `user_id` = ?");
+            $grabAchievements -> bind_param('s', $user_id_get);
+            if (!$grabAchievements -> execute()) {
+                echo $mysql -> error;
+                exit();
+            }
+            $grabAchievementsResult = $grabAchievements -> get_result();
+            if ($grabAchievementsResult -> num_rows > 0) {
+                while ($row = $grabAchievementsResult -> fetch_assoc()) {
+                    $achievement_id = $row['achievement_id'];
+                    $dateOfObtain = $row['dateOfObtain'];
+
+                    $grabAchievementDetails = $mysql -> prepare("SELECT `achievement_id`, `achievementName`, `achievementDescription` FROM `achievementlist` WHERE `achievement_id` = ?");
+                    $grabAchievementDetails -> bind_param('s', $achievement_id);
+                    if (!$grabAchievementDetails -> execute()) {
+                        echo $mysql -> error;
+                        exit();
+                    }
+                    $grabAchievementDetails -> bind_result($grabbedAchievement_id, $achievementName, $achievementDescription);
+                    while ($grabAchievementDetails -> fetch()) {
+                        if ($achievement_id != $grabbedAchievement_id) {
+                            echo 'error'; 
+                            exit();
+                        }
+                        echo <<<TEXT
+                                <img style="width:100px;" src="images/achivements/{$achievement_id}.png" alt="{$achievementName}">
+                            TEXT;
+                    }
+                }
+            }
+            echo '</ul>';
+
             if ($_SESSION['user_id'] != $user_id) {
                 $getLevel = $mysql -> prepare("SELECT `userLevel` FROM `userLevel` WHERE `user_id` = ?");
                 $getLevel -> bind_param('s', $user_id);
@@ -137,6 +170,7 @@
                         $userPageLevel = $row['userLevel'];
                     }
                 }
+                
 
                 echo '<table style="width: 100%; margin: 0;"><tr>
                         <td style="width: 10%;">'. '<img style="margin: 10px; margin-left: 20px; border-radius: 50%; width: 250px;" src="images/profileImage/'. $imageName .'" alt="user_profile_pic">' .'</td>
@@ -154,7 +188,7 @@
                         echo '<p>Barátkérelem visszavonása</p>';
                     } elseif ($pending == false) {
                         echo '<form action="includeFiles/friendRequest.inc.php" method="post">
-                                <input type="hidden" value="'. $user_id .'" name="to_id" />
+                                <input type="hidden" value="'. $user_id .'" name="submittedUserName" />
                                 <button type="submit" name="friendRequest">Barátnak jelölés</button>';
                     }
                 }

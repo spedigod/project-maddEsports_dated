@@ -21,7 +21,7 @@
 
         }
 
-        /*if (isset($_POST['profile_picture_submit'])) {
+        /**if (isset($_POST['profile_picture_submit'])) {
             $file = $_FILES['profile_picture_reset'];
 
             $fileName = $_FILES['profile_picture_reset']['name'];
@@ -70,8 +70,9 @@
                 exit();
             }
             header('location: ../profileEdit.php?ID='. $user_id .'&error=thereWasAnError');
-        } */
+        }
 
+        */
         if (isset($_POST['profile_reset_submit'])) {
 
             if ($_POST['username'] != $_POST['username_reset']) {

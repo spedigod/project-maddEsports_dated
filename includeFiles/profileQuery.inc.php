@@ -13,31 +13,11 @@
         $userLastName = $row['userLastName'];
         $isAdmin = $row['isAdmin'];
         $inGroup = $_SESSION['inGroup'] = $row['inGroup'];
-        if (!empty($row['userGroup'])) {
-            $_SESSION['userGroup'] = $userGroup = $row['userGroup'];
-        }
+        
     }
     $stmt -> close();
 
-    if ($inGroup == 1) {
-        $stmt = $mysql -> prepare('SELECT * FROM `groups` WHERE `groupName` = ?');
-        $stmt -> bind_param('s', $userGroup);
-        $stmt -> execute();
-
-        $result = $stmt -> get_result();
-        while ($row = $result -> fetch_assoc()) {
-            $groupName = $row['groupName'];
-            $groupAdmin = $row['leader_id'];
-            $groupLogo = $row['groupLogo'];
-            $groupGame = $row['groupGame'];
-            $groupMember1 = $row['member1_id'];
-            $groupMember2 = $row['member2_id'];
-            $groupMember3 = $row['member3_id'];
-            $groupMember4 = $row['member4_id'];
-            $groupMember5 = $row['member5_id'];
-        }
-        $stmt -> close();
-    }
+    
 
     if (file_exists('images\profileImage\profile.'. $_SESSION['user_id'] .'.png')) {
         $_SESSION['imageName'] = 'profile.'. $_SESSION['user_id'] .'.png';

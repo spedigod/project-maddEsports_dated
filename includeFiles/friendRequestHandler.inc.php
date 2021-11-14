@@ -1,7 +1,10 @@
 <?php
  # barát kérelem elfogadva
-if (isset($_POST['requestAccept'])) {
+ 
+if (isset($_POST['friendRequestAcceptSubmit'])) {
     include 'dbh.inc.php';
+
+    $notificationType = 1;
 
     $friendTwo = $_SESSION['user_id'];
     $friendOne = $_POST['request_from'];
@@ -18,11 +21,25 @@ if (isset($_POST['requestAccept'])) {
     $requestAccept -> execute();
     $requestAccept -> close();
 
-    header('location: ../profile.php');
+    $updateUserData = $mysql ->prepare("UPDATE `userdata` SET `friendCount` = `friendCount` + 1 WHERE user_id = ? OR user_id = ?");
+    $updateUserData -> bind_param('ss', $friendOne, $friendTwo);
+    $updateUserData -> execute();
+    $updateUserData -> close();
+
+    $addNotification = $mysql -> prepare("INSERT INTO `usernotifications` (user_id, notification_type) VALUE(?, ?)");
+    $addNotification -> bind_param('ss', $friendOne, $notificationType);
+    $addNotification -> execute();
+    $addNotification -> close();
+
+    if (isset($_POST['quickAdd'])) {
+        unset($_SESSION['friendrequests'][$_POST['quickAdd']]);
+    }
+    $_SESSION['friendrequest'] -= 1;
+    header('location: ../home.php');
     exit();
 
  # barát kérelem elutasítva
-} else if (isset($_POST['requestDeny'])) {
+} else if (isset($_POST['friendRequestDenySubmit'])) {
     include 'dbh.inc.php';
 
     $publicRequestID = $_POST['request_id'];
@@ -32,10 +49,14 @@ if (isset($_POST['requestAccept'])) {
     $requestAccept -> execute();
     $requestAccept -> close();
 
-    header('location: ../profile.php');
+    if (isset($_POST['quickAdd'])) {
+        unset($_SESSION['friendrequests'][$_POST['quickAdd']]);
+    }
+    $_SESSION['friendrequest'] -= 1;
+    header('location: ../home.php');
     exit();
 
- # nem jóváhagyott belépés
+ # barát eltávolítása
 } else if (isset($_POST['friendDelete'])) {
     include 'dbh.inc.php';
 
@@ -47,6 +68,11 @@ if (isset($_POST['requestAccept'])) {
     $deleteFriend -> bind_param('ssss', $userPage, $user, $userPage, $user);
     $deleteFriend -> execute();
     $deleteFriend -> close();
+
+    $updateUserData = $mysql ->prepare("UPDATE `userdata` SET `friendCount` = `friendCount` - 1 WHERE user_id = ? OR user_id = ?");
+    $updateUserData -> bind_param('ss', $friendOne, $friendTwo);
+    $updateUserData -> execute();
+    $updateUserData -> close();
     
     header('location: ../profile.php?ID='. $user);
     exit();
